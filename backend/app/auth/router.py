@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -61,6 +61,12 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     hashed = hash_password(user_in.password)
     # New registrations default to Viewer role
     user = User(username=user_in.username, email=user_in.email, password=hashed, role=Role.Viewer.value)
+    # ensure timestamps are set for SQLite and other DBs that may not apply server defaults
+    try:
+        user.created_at = datetime.utcnow()
+        user.updated_at = datetime.utcnow()
+    except Exception:
+        pass
     db.add(user)
     db.commit()
     db.refresh(user)
