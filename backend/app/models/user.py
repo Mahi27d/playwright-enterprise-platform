@@ -1,9 +1,19 @@
+from enum import Enum as PyEnum
+
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Boolean
 
 from app.database.base import Base
+
+
+class Role(PyEnum):
+    Admin = "Admin"
+    Manager = "Manager"
+    Operator = "Operator"
+    Viewer = "Viewer"
+
 
 class User(Base):
 
@@ -17,6 +27,6 @@ class User(Base):
 
     password = Column(String)
 
-    role = Column(String)
+    role = Column(String(50), default=Role.Viewer.value)
 
     is_active = Column(Boolean, default=True)
