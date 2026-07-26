@@ -1,13 +1,13 @@
-FROM node:20-slim
+FROM node:22
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package*.json ./
+
 RUN npm install
 
-COPY . ./
+COPY . .
 
-RUN npm run build
+EXPOSE 5173
 
-EXPOSE 4173
-CMD ["npm", "run", "serve"]
+CMD ["npm","run","dev","--","--host"]

@@ -1,23 +1,17 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(
-    title="Enterprise Playwright Automation Platform",
-    version="1.0.0"
-)
+from app.database.database import engine
+from app.database.base import Base
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+import app.models.user
+import app.models.agent
+import app.models.schedule
+import app.models.execution
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to EPAP"}
-
-@app.get("/health")
-def health():
-    return {"status": "Healthy"}
+    return {"message":"EPAP"}
