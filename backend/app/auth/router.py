@@ -12,6 +12,7 @@ from app.models.user import User, Role
 from app.schemas.login import Token, LoginRequest
 from app.schemas.user import UserCreate, UserResponse
 from app.auth.password import hash_password
+from app.auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -71,3 +72,9 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     return user
+
+
+
+@router.get("/me", response_model=UserResponse)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    return current_user
