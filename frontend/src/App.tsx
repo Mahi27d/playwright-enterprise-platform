@@ -1,11 +1,26 @@
-import React from 'react';
+import { useEffect, useState } from "react";
+import api from "./services/api";
 
-const App: React.FC = () => {
+function App() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    api.get("/")
+      .then((res) => {
+        setMessage(res.data.message);
+      })
+      .catch(() => {
+        setMessage("Backend not connected");
+      });
+  }, []);
+
   return (
-    <div>
-      <h1>Playwright Enterprise Platform</h1>
+    <div style={{ padding: 40 }}>
+      <h1>Enterprise Playwright Automation Platform</h1>
+
+      <h2>{message}</h2>
     </div>
   );
-};
+}
 
 export default App;
